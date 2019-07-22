@@ -7,6 +7,14 @@
         "declarativeContent",
         "storage"
     ],
+    "content_scripts": [
+        {
+          "matches": [
+            "<all_urls>"
+          ],
+          "js": ["content.js"]
+        }
+    ],
     "browser_action": {
         "default_popup": "popup.html",
         "default_icon": {
@@ -27,6 +35,27 @@
             "suggested_key": {
                 "default": "Ctrl+Shift+A",
                 "mac": "MacCtrl+Shift+A"
+            },
+            "description": "Opens popup.html"
+        },
+        "speed_down": {
+            "suggested_key": {
+                "default": "Alt+Comma",
+                "mac": "Alt+Comma"
+            },
+            "description": "Opens popup.html"
+        },
+        "speed_up": {
+            "suggested_key": {
+                "default": "Alt+Period",
+                "mac": "Alt+Period"
+            },
+            "description": "Opens popup.html"
+        },
+        "reset_speed": {
+            "suggested_key": {
+                "default": "Alt+Space",
+                "mac": "Alt+Space"
             },
             "description": "Opens popup.html"
         }

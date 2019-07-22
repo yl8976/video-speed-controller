@@ -17,7 +17,6 @@ chrome.storage.sync.get('speed', function (data) {
                 code: 'document.querySelector("video").playbackRate = "' + currentSpeed + '";'
             });
     });
-
 });
 
 speedUpButton.onclick = function (element) {
@@ -51,6 +50,4 @@ let changeSpeed = function (speedDelta) {
                 });
         });
     });
-
-
 }
