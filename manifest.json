@@ -1,7 +1,7 @@
 {
     "manifest_version": 2,
     "name": "Video Speed Controller",
-    "version": "0.1",
+    "version": "0.3",
     "permissions": [
         "activeTab",
         "declarativeContent",
@@ -43,21 +43,21 @@
                 "default": "Alt+Comma",
                 "mac": "Alt+Comma"
             },
-            "description": "Opens popup.html"
+            "description": "Decreases speed by 0.25x"
         },
         "speed_up": {
             "suggested_key": {
                 "default": "Alt+Period",
                 "mac": "Alt+Period"
             },
-            "description": "Opens popup.html"
+            "description": "Increases speed by 0.25x"
         },
         "reset_speed": {
             "suggested_key": {
                 "default": "Alt+Space",
                 "mac": "Alt+Space"
             },
-            "description": "Opens popup.html"
+            "description": "Resets speed to 1x"
         }
     },
     "background": {

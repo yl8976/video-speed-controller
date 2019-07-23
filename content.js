@@ -1,52 +1,52 @@
+// content.js
+// Processes key commands send by background.js.
+
+// Listens to key commands and updates speed accordingly.
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
-    console.log(sender.tab ? "from a content script:" + sender.tab.url : "from the extension");
-    console.log("Command:", request.cmd);
-
+    // Depending on what command was sent, call
+    // changeSpeed accordingly. If reset_speed
+    // was called, set speed to 1x.
     if (request.cmd == "speed_down") {
-        changeSpeed("-0.25");
+        changeSpeed("-0.25", false);
     } else if (request.cmd == "speed_up") {
-        changeSpeed("0.25");
+        changeSpeed("0.25", false);
     } else {
-        chrome.storage.sync.get('speed', function (data) {
-            console.log("Speed is now 1x.");
-            // Save new default speed to local storage.
-            chrome.storage.sync.set({
-                speed: '1'
-            });
-
-            var video = document.querySelector("video");
-            if (video) {
-                video.playbackRate = 1.0;
-            } else {
-                console.log("There is no Video element on the page.")
-            }
-        });
-
-        chrome.runtime.sendMessage({update: "update"});
+        changeSpeed("0", true);
     }
     
 });
 
-// Changes the current speed by amount speedDelta. Note that
+// Changes the current speed by amount speedDelta.
+// Resets speed to 1x if reset is true. Note that
 // speedDelta can be either positive or negative.
-let changeSpeed = function (speedDelta) {
-    // Get current default speed from local storage
+let changeSpeed = function (speedDelta, reset) {
+    // Get current default speed from local storage.
     chrome.storage.sync.get('speed', function (data) {
+        // Extract the speed value from the data.
         currentSpeed = data.speed;
-        let newSpeed = Number(currentSpeed) + Number(speedDelta);
-        console.log("Speed is now " + newSpeed + "x.");
+
+        // Calculate the new speed if reset is false.
+        let newSpeed = 1.0;
+        if (!reset) {
+            newSpeed = Number(currentSpeed) + Number(speedDelta);
+        }
+
         // Save new default speed to local storage.
         chrome.storage.sync.set({
             speed: String(newSpeed)
         });
 
+        // Check if a <video> tag exists; if not,
+        // do not attempt to update the speed.
         var video = document.querySelector("video");
-            if (video) {
-                video.playbackRate = newSpeed;
-            } else {
-                console.log("There is no Video element on the page.")
-            }
+        if (video) {
+            video.playbackRate = newSpeed;
+        } else {
+            console.log("There is no video element on the page.")
+        }
         
+        // Send a message to popup.js to update its
+        // value if the popup is already open.
         chrome.runtime.sendMessage({update: "update"});
-    });
+    });    
 }
