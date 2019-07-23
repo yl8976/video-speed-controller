@@ -7,14 +7,14 @@ let currentSpeed;
 chrome.storage.sync.get('speed', function (data) {
     currentSpeedText.innerText = data.speed + "x";
     currentSpeed = data.speed;
-    console.log("Current speed: " + currentSpeed);
+    console.log("Current speed: " + currentSpeed + "x");
     chrome.tabs.query({
         active: true,
         currentWindow: true
     }, function (tabs) {
         chrome.tabs.executeScript(
             tabs[0].id, {
-                code: 'document.querySelector("video").playbackRate = "' + currentSpeed + '";'
+                code: 'var video = document.querySelector("video");if (video) {video.playbackRate = ' + currentSpeed + ';} else {console.log("There is no Video element on the page.")};'
             });
     });
 });
@@ -27,13 +27,14 @@ speedDownButton.onclick = function (element) {
     changeSpeed("-0.25");
 };
 
-document.onkeyup=function(e){
-    var e = e || window.event; // for IE to cover IEs window event-object
-    if(e.altKey && e.which == 190) {
-        alert('Keyboard shortcut working!');
-        return false;
-    }
-}
+chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
+    console.log(sender.tab ? "from a content script:" + sender.tab.url : "from the extension");
+    console.log("Command:", request.update);
+
+    chrome.storage.sync.get('speed', function (data) {
+        currentSpeedText.innerText = data.speed + "x";
+    });
+});
 
 // Changes the current speed by amount speedDelta. Note that
 // speedDelta can be either positive or negative.
@@ -54,7 +55,7 @@ let changeSpeed = function (speedDelta) {
         }, function (tabs) {
             chrome.tabs.executeScript(
                 tabs[0].id, {
-                    code: 'document.querySelector("video").playbackRate = "' + newSpeed + '";'
+                    code: 'var video = document.querySelector("video");if (video) {video.playbackRate = ' + newSpeed + ';} else {console.log("There is no Video element on the page.")};'
                 });
         });
     });

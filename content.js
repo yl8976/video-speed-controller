@@ -11,10 +11,18 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
             console.log("Speed is now 1x.");
             // Save new default speed to local storage.
             chrome.storage.sync.set({
-                speed: '1.0'
+                speed: '1'
             });
-            document.querySelector("video").playbackRate = 1.0;
+
+            var video = document.querySelector("video");
+            if (video) {
+                video.playbackRate = 1.0;
+            } else {
+                console.log("There is no Video element on the page.")
+            }
         });
+
+        chrome.runtime.sendMessage({update: "update"});
     }
     
 });
@@ -31,6 +39,14 @@ let changeSpeed = function (speedDelta) {
         chrome.storage.sync.set({
             speed: String(newSpeed)
         });
-        document.querySelector("video").playbackRate = newSpeed;
+
+        var video = document.querySelector("video");
+            if (video) {
+                video.playbackRate = newSpeed;
+            } else {
+                console.log("There is no Video element on the page.")
+            }
+        
+        chrome.runtime.sendMessage({update: "update"});
     });
 }
