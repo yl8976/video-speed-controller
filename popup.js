@@ -27,6 +27,14 @@ speedDownButton.onclick = function (element) {
     changeSpeed("-0.25");
 };
 
+document.onkeyup=function(e){
+    var e = e || window.event; // for IE to cover IEs window event-object
+    if(e.altKey && e.which == 190) {
+        alert('Keyboard shortcut working!');
+        return false;
+    }
+}
+
 // Changes the current speed by amount speedDelta. Note that
 // speedDelta can be either positive or negative.
 let changeSpeed = function (speedDelta) {
